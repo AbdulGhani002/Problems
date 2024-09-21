@@ -17,7 +17,7 @@ int main(){
    scanf("%d", &target);
   file_pointer = fopen("./input.txt" , "r");
   char buffer[200];
-  int data[6] = {0};
+  int data[200] = {0};
   int size = sizeof(data) / sizeof(data[0]);
   while(fgets(buffer,sizeof(buffer),file_pointer)){
     int number = atoi(buffer);
@@ -34,6 +34,7 @@ int main(){
     for(int j=1;j<size;j++){
       if(data[i] + data[j] == target){
 	printf("Target Found: %d %d \n",data[i],data[j]);
+	printf("Product: %d" , data[i]*data[j]);
 	return 0;
       }
     }
