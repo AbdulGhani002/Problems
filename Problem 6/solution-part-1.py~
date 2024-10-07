@@ -1,0 +1,4 @@
+with open('input.txt', 'r') as file:
+    lines = [line for line in file]
+each_passport = lines.split(":")
+print(each_passport)

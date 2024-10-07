@@ -1,0 +1,60 @@
+import re
+
+# Function to validate the fields
+def is_valid(passport):
+    # Validate Birth Year
+    if not (1920 <= int(passport.get('byr', 0)) <= 2002):
+        return False
+    # Validate Issue Year
+    if not (2010 <= int(passport.get('iyr', 0)) <= 2020):
+        return False
+    # Validate Expiration Year
+    if not (2020 <= int(passport.get('eyr', 0)) <= 2030):
+        return False
+    # Validate Height
+    hgt = passport.get('hgt', '')
+    if 'cm' in hgt:
+        if not (150 <= int(hgt.replace('cm', '')) <= 193):
+            return False
+    elif 'in' in hgt:
+        if not (59 <= int(hgt.replace('in', '')) <= 76):
+            return False
+    else:
+        return False
+    # Validate Hair Color
+    if not re.match(r"^#[0-9a-f]{6}$", passport.get('hcl', '')):
+        return False
+    # Validate Eye Color
+    if passport.get('ecl', '') not in ['amb', 'blu', 'brn', 'gry', 'grn', 'hzl', 'oth']:
+        return False
+    # Validate Passport ID
+    if not re.match(r"^\d{9}$", passport.get('pid', '')):
+        return False
+    return True
+
+# Parse the input and validate each passport
+with open('input.txt', 'r') as file:
+    lines = [line.strip() for line in file]
+
+valid_passport_count = 0
+passport_data = {}
+
+for item in lines:
+    if item:
+        # Split key:value pairs and store them in the passport_data dictionary
+        fields = item.split()
+        for field in fields:
+            key, value = field.split(':')
+            passport_data[key] = value
+    else:
+        # If an empty line is found, check if the passport is valid
+        if all(field in passport_data for field in ['byr','iyr','eyr','hgt','hcl','ecl','pid']) and is_valid(passport_data):
+            valid_passport_count += 1
+        # Reset for the next passport
+        passport_data = {}
+
+# Check the last passport (in case there is no blank line at the end of the file)
+if all(field in passport_data for field in ['byr','iyr','eyr','hgt','hcl','ecl','pid']) and is_valid(passport_data):
+    valid_passport_count += 1
+
+print(valid_passport_count)
